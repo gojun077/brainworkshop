@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # This Python file uses the following encoding: utf-8
 #------------------------------------------------------------------------------
 # Brain Workshop: a Dual N-Back game in Python
@@ -42,6 +42,7 @@ def get_argv(arg):
             exit(1)
 
 import random, os, sys, imp, socket, webbrowser, time, math, traceback, datetime, errno
+import beeminder_add_data
 if sys.version_info >= (3,0):
     import urllib.request, configparser as ConfigParser
     from io import StringIO
@@ -3973,6 +3974,7 @@ def end_session(cancelled=False):
         mode.session_number -= 1
     if not cancelled:
         stats.sessions_today += 1
+        beeminder_add_data.submit()
     for visual in visuals: visual.hide()
     mode.started = False
     mode.paused = False
