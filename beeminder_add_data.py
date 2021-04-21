@@ -17,7 +17,7 @@ import json
 import requests
 
 
-def submit():
+def submit(comment_moar: str):
     """
     Increment Beeminder goal by + 1.0
     """
@@ -28,10 +28,12 @@ def submit():
             epoch_utc = int(datetime.datetime.utcnow().timestamp())
             myuser, mygoal = bmndrD["username"], bmndrD["goalname"]
             endpt = f"{url}/{myuser}/goals/{mygoal}/datapoints.json"
+            comment = bmndrD["comment"]
+            full_comment = f"{comment} | {comment_moar}"
             payload = {"auth_token": bmndrD["auth_token"],
                        "timestamp": epoch_utc,
                        "value": 1.0,
-                       "comment": bmndrD["comment"]}
+                       "comment": full_comment}
             header = {"Content-Type": "application/json"}
             resp_post = requests.post(endpt, headers=header,
                                       data=json.dumps(payload))

@@ -3964,8 +3964,10 @@ def new_session():
     update_all_labels()
     pyglet.clock.schedule_interval(fade_out, 0.05)
 
-# this function handles the finish or cancellation of a session.
 def end_session(cancelled=False):
+    """
+    this function handles the finish or cancellation of a session.
+    """
     for label in input_labels:
         label.delete()
     while input_labels:
@@ -3974,7 +3976,8 @@ def end_session(cancelled=False):
         mode.session_number -= 1
     if not cancelled:
         stats.sessions_today += 1
-        beeminder_add_data.submit()
+        bmndr_cmt = f"DNB: {mode.back}, session: {mode.session_number}"
+        beeminder_add_data.submit(bmndr_cmt)
     for visual in visuals: visual.hide()
     mode.started = False
     mode.paused = False
