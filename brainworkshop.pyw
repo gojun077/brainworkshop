@@ -3314,8 +3314,13 @@ class AnalysisLabel:
         right = sum([rights[mod] for mod in mods])
         wrong = sum([wrongs[mod] for mod in mods])
 
+        bmndr_cmt = f"DNB: {mode.back}, session: {mode.session_number}"
         for mod in mods:
             category_percents[mod] = calc_percent(rights[mod], wrongs[mod])
+            if mod =='position1':
+                bmndr_cmt += f" pos right: {rights[mod]}, pos wrong: {wrongs[mod]}"
+            elif mod == 'audio':
+                bmndr_cmt += f" audio right: {rights[mod]}, audio wrong: {wrongs[mod]}"
 
         if cfg.JAEGGI_SCORING:
             percent = min([category_percents[m] for m in mode.modalities[mode.mode]])
@@ -3328,6 +3333,8 @@ class AnalysisLabel:
 
         self.label.text = ''.join(str_list)
 
+        bmndr_cmt += f" overall: {percent}%, pos: {category_percents['position1']}%, audio: {category_percents['audio']}%"
+        beeminder_add_data.submit(bmndr_cmt)  # send to Beeminder API
         stats.submit_session(percent, category_percents)
 
 # this controls the title of the session history chart.
@@ -3976,8 +3983,6 @@ def end_session(cancelled=False):
         mode.session_number -= 1
     if not cancelled:
         stats.sessions_today += 1
-        bmndr_cmt = f"DNB: {mode.back}, session: {mode.session_number}"
-        beeminder_add_data.submit(bmndr_cmt)
     for visual in visuals: visual.hide()
     mode.started = False
     mode.paused = False
