@@ -15,6 +15,8 @@
 import datetime
 import json
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 def submit(comment_moar: str):
@@ -35,25 +37,26 @@ def submit(comment_moar: str):
                        "value": 1.0,
                        "comment": full_comment}
             header = {"Content-Type": "application/json"}
+
+            retry_strategy = Retry(
+                total=3,
+                status_forcelist=[429, 500, 502, 503, 504],
+                method_whitelist=["HEAD", "GET", "PUT", "DELETE", "OPTIONS",
+                                  "POST", "TRACE"],
+                backoff_factor = 2
+            )
+            adapter = HTTPAdapter(max_retries=retry_strategy)
             sess = requests.Session()
+            sess.mount = ("https://", adapter)
             resp_sess = sess.post(endpt, headers=header,
-                                  data=json.dumps(payload), timeout=5)
+                                  data=json.dumps(payload), timeout=10,
+                                  )
             resp_sess.raise_for_status()
-            """
-            if resp_post.status_code != 200:
-                print(f"HTTP Status: {resp_post.status_code}")
-                print(f"Error msg: {resp_post.text}")
-                raise Exception
-            else:
-                print("Data successfully submitted to Beeminder")
-                resp_data = resp_post.json()
-                print(resp_data)
-            """
             print("Data successfully submitted to Beeminder")
             resp_data = resp_sess.json()
             print(resp_data)
     except requests.exceptions.ConnectionError as e:
-        raise e
+        print(f"ConnError: {e}, payload: {full_comment}")
     except requests.exceptions.Timeout as e:
         print(f"cnxn TIMEOUT: {e}")
     # 4XX, 5XX HTTP errors
