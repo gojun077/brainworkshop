@@ -3360,12 +3360,12 @@ class ChartTitleLabel:
 # this controls the session history chart.
 class ChartLabel:
     def __init__(self):
-        self.start_x = from_right_edge(140)
+        self.start_x = from_right_edge(160)
         self.start_y = from_top_edge(105)
         self.line_spacing      = calc_fontsize(15)
-        self.column_spacing_12 = calc_fontsize(30)
-        self.column_spacing_23 = calc_fontsize(70)
-        self.font_size         = calc_fontsize(10)
+        self.column_spacing_12 = calc_fontsize(60)
+        self.column_spacing_23 = calc_fontsize(50)
+        self.font_size         = calc_fontsize(8)
         self.color_normal   = (128, 128, 128, 255)
         self.color_advance  = (0, 160, 0, 255)
         self.color_fallback = (160, 0, 0, 255)
