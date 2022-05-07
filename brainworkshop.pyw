@@ -41,7 +41,7 @@ def get_argv(arg):
             error_msg("Expected an argument following %s" % arg)
             exit(1)
 
-import random, os, sys, imp, socket, webbrowser, time, math, traceback, datetime, errno
+import random, os, sys, socket, webbrowser, time, math, traceback, datetime, errno
 import beeminder_add_data
 if sys.version_info >= (3,0):
     import urllib.request, configparser as ConfigParser
@@ -140,8 +140,7 @@ def get_pyglet_media_Player():
 # some functions to assist in path determination
 def main_is_frozen():
     return (hasattr(sys, "frozen") or # new py2exe
-        hasattr(sys, "importers") # old py2exe
-        or imp.is_frozen("__main__")) # tools/freeze
+        hasattr(sys, "importers")) # old py2exe
 def get_main_dir():
     if main_is_frozen():
         return os.path.dirname(sys.executable)
