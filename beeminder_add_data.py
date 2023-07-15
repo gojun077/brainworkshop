@@ -62,8 +62,9 @@ def submit(comment_moar: str):
     # 4XX, 5XX HTTP errors
     except requests.exceptions.HTTPError as e:
         print(f"status code {resp_sess.status_code} from {url}: {e}")
-    except:
-        print("error occurred while trying to send data to Beeminder...")
+    # Error Catch-all
+    except Exception as ex:
+        print(f"error occurred while trying to send data to Beeminder: {ex}")
 
 
 def main():
